@@ -1,0 +1,343 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Forum DAF",
+        "description": "Este projecto visa criar uma API REST para desenvolvimento de um site ou aplicação de\nsuporte, num formato de pergunta e respostas.<br />\nTem como principal objectivo testar a capacidade do aluno criar uma aplicação web, com\nSymfony 4 e usando os padrões lecionados nas aulas da disciplina de “desenvolvimento de\naplicações com frameworks.",
+        "contact": {
+            "email": "silvam.filipe@gmail.com"
+        },
+        "version": "v0.1.0"
+    },
+    "paths": {
+        "/questions": {
+            "post": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Adds a new question for an authenticated user",
+                "operationId": "addQuestion",
+                "requestBody": {
+                    "request": "AddQuestion",
+                    "description": "Object containing the very minimal inforamtion needded to create a question",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddQuestionCommand"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Missing property or errors regarding data sent."
+                    },
+                    "200": {
+                        "description": "The newlly crated question",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Question"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2.0-Token": [
+                            "user.management"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/question/{questionId}": {
+            "get": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Retrieves the question stored with provided question identifier",
+                "operationId": "readQuestion",
+                "parameters": [
+                    {
+                        "name": "questionId",
+                        "in": "path",
+                        "description": "ID of question to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid question identifier"
+                    },
+                    "404": {
+                        "description": "Quesiton not found"
+                    },
+                    "200": {
+                        "description": "The question with stored with provided identifier",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Question"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2.0-Token": [
+                            "user.management"
+                        ]
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Edits the question with the provided question identifier",
+                "operationId": "editQuestion",
+                "parameters": [
+                    {
+                        "name": "questionId",
+                        "in": "path",
+                        "description": "ID of question to edit",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "request": "EditQuestion",
+                    "description": "Object containing the new inforamtion needded to update the question stored with the privided identifier",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EditQuestionCommand"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Missing property or errors regarding data sent."
+                    },
+                    "404": {
+                        "description": "Quesiton not found"
+                    },
+                    "412": {
+                        "description": "Trying to edit a question that isn't owned by the authenticated user or it's open."
+                    },
+                    "200": {
+                        "description": "The question with changed values",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Question"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2.0-Token": [
+                            "user.management"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/users/me": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Current user information",
+                "operationId": "userInfo",
+                "responses": {
+                    "200": {
+                        "description": "Current user information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2.0-Token": [
+                            "user.management"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AddQuestionCommand": {
+                "title": "AddQuestionCommand",
+                "description": "AddQuestionCommand",
+                "properties": {
+                    "title": {
+                        "description": "Question title",
+                        "type": "string",
+                        "example": "What time is it?"
+                    },
+                    "body": {
+                        "description": "Question body",
+                        "type": "string",
+                        "example": "A longer consideration on how to ask for current time."
+                    }
+                },
+                "type": "object"
+            },
+            "EditQuestionCommand": {
+                "title": "EditQuestionCommand",
+                "description": "EditQuestionCommand",
+                "properties": {
+                    "title": {
+                        "description": "Question title",
+                        "type": "string",
+                        "example": "What time is it in Boston?"
+                    },
+                    "body": {
+                        "description": "Question body",
+                        "type": "string",
+                        "example": "A longer consideration on how to ask for current time in Boston."
+                    }
+                },
+                "type": "object"
+            },
+            "DateTime": {
+                "properties": {
+                    "date": {
+                        "description": "Formatted date",
+                        "type": "string",
+                        "example": "2018-07-04 23:07:14.000000"
+                    },
+                    "timezone_type": {
+                        "description": "Timezone type ID",
+                        "type": "integer",
+                        "format": "int32",
+                        "example": "3"
+                    },
+                    "timezone": {
+                        "description": "Timezone name",
+                        "type": "string",
+                        "example": "Atlantic/Azores"
+                    }
+                },
+                "type": "object"
+            },
+            "Question": {
+                "title": "Question",
+                "description": "Question",
+                "properties": {
+                    "questionId": {
+                        "description": "Question identifier",
+                        "type": "string",
+                        "example": "e1026e90-9b21-4b6d-b06e-9c592f7bdb82"
+                    },
+                    "owner": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "title": {
+                        "description": "Question title",
+                        "type": "string",
+                        "example": "What time is it?"
+                    },
+                    "body": {
+                        "description": "Question body",
+                        "type": "string",
+                        "example": "A longuer consideration on how to ask for current time."
+                    },
+                    "appliedOn": {
+                        "$ref": "#/components/schemas/DateTimeImmutable"
+                    },
+                    "open": {
+                        "description": "Question open state",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "lastEditedOn": {
+                        "$ref": "#/components/schemas/DateTimeImmutable"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User",
+                "properties": {
+                    "userId": {
+                        "description": "User identifier",
+                        "type": "string",
+                        "example": "e1026e90-9b21-4b6d-b06e-9c592f7bdb82"
+                    },
+                    "name": {
+                        "description": "User full name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "User's e-mail address",
+                        "type": "string",
+                        "example": "john.doe@example.com"
+                    }
+                },
+                "type": "object"
+            },
+            "DateTimeImmutable": {
+                "title": "DateTimeImmutable",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "example": "2019-07-07 00:00:00.000000"
+                    },
+                    "timezone_type": {
+                        "type": "int",
+                        "example": 3
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "example": "UTC"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2.0-Token": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "tokenUrl": "http://0.0.0.0:8080/auth/access-token",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Questions",
+            "description": "Questrions API endpoints"
+        },
+        {
+            "name": "Users",
+            "description": "User related endpoints"
+        }
+    ]
+}
