@@ -100,13 +100,13 @@
                 "tags": [
                     "Questions"
                 ],
-                "summary": "Edits the question with the provided question identifier",
+                "summary": "Delete the question with the provided question identifier",
                 "operationId": "editQuestion",
                 "parameters": [
                     {
                         "name": "questionId",
                         "in": "path",
-                        "description": "ID of question to edit",
+                        "description": "ID of question to delete",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -114,13 +114,13 @@
                     }
                 ],
                 "requestBody": {
-                    "request": "EditQuestion",
+                    "request": "DeleteQuestion",
                     "description": "Object containing the new inforamtion needded to update the question stored with the privided identifier",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/EditQuestionCommand"
+                                "$ref": "#/components/schemas/DeleteQuestionCommand"
                             }
                         }
                     }
@@ -199,6 +199,18 @@
                         "description": "Question body",
                         "type": "string",
                         "example": "A longer consideration on how to ask for current time."
+                    }
+                },
+                "type": "object"
+            },
+            "DeleteQuestionCommand": {
+                "title": "DeleteQuestionCommand",
+                "description": "DeleteQuestionCommand",
+                "properties": {
+                    "": {
+                        "description": "Question title",
+                        "type": "string",
+                        "example": "What time is it in Boston?"
                     }
                 },
                 "type": "object"

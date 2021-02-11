@@ -5,10 +5,11 @@ namespace App\UserInterface\QuestionManagement;
 
 
 use App\Application\CommandBus;
+use App\Application\QuestionManagement\DeleteQuestionCommand;
 use App\Domain\Exception\EntityNotFound;
 use App\Domain\Exception\FailedEntitySpecification;
 use App\Domain\QuestionManagement\Question\QuestionId;
-use App\QuestionManagement\DeleteQuestionCommand;
+
 use App\UserInterface\ApiControllerMethods;
 use App\UserInterface\UserManagement\OAuth2\AuthenticatedControllerInterface;
 use App\UserInterface\UserManagement\OAuth2\AuthenticatedControllerMethods;
@@ -16,7 +17,7 @@ use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
@@ -51,7 +52,7 @@ class DeleteQuestionController  extends AbstractController implements Authentica
      *
      * @param Request $request
      * @return Response
-     * @Route(path="/question/{questionId}", methods={"DELETE", "PATCH"})
+     * @Route(path="/question/{questionId}", methods={"DELETE"})
      */
     public function handle(Request $request, string $questionId): Response
     {
@@ -60,7 +61,7 @@ class DeleteQuestionController  extends AbstractController implements Authentica
 
 
             $command = new DeleteQuestionCommand(
-                $questionId,
+                $questionId
 
             );
 

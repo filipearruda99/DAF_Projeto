@@ -9,7 +9,7 @@ use DateTimeImmutable;
 use JsonSerializable;
 
 
-class Answer implements JsonSerializable
+class Answer
 {
 
 
@@ -76,16 +76,8 @@ class Answer implements JsonSerializable
 
 
 
-    public function jsonSerialize()
-    {
-        return [
-            "questionId" => $this->questionId,
-            "description" => $this->description,
-            "owner" => $this->owner,
-            "givenOn" => $this->givenOn
 
-        ];
-    }
+
 
 
 }
