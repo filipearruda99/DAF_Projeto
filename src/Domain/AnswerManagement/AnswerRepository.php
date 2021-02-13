@@ -41,6 +41,5 @@ interface AnswerRepository
      * @param Answer $question
      */
     public function remove(Answer $answer): void;
-}
 
 }

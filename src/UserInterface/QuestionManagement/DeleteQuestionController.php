@@ -81,11 +81,11 @@ class DeleteQuestionController  extends AbstractController implements Authentica
 
 
 /**
- * @OA\Put(
+ * @OA\Delete(
  *     path="/question/{questionId}",
  *     tags={"Questions"},
  *     summary="Delete the question with the provided question identifier",
- *     operationId="editQuestion",
+ *     operationId="deleteQuestion",
  *     @OA\Response(
  *         response=400,
  *         description="Missing property or errors regarding data sent."
