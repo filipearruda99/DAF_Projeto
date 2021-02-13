@@ -28,12 +28,18 @@ class AnswerWasCreatedSpec extends ObjectBehavior
 
 
 
-        $answer->answerId()->willReturn($this->answerId);
+        /*$answer->answerId()->willReturn($this->answerId);
         $answer->owner()->willReturn($this->user);
         $answer->description()->willReturn($this->description);
         $user->userId()->willReturn($this->userId);
-        $answer->question()->willReturn($this->question);
+        $answer->question()->willReturn($this->question);*/
 
+        $user->userId()->willReturn($this->userId);
+
+        $answer->answerId()->willReturn($this->answerId);
+        $answer->owner()->willReturn($user);
+        $answer->question()->willReturn($question);
+        $answer->description()->willReturn($this->description);
 
         $this->beConstructedWith(
             $answer

@@ -16,6 +16,7 @@ class AnswerWasCreated extends AbstractEvent implements Event
     private UserId $owner;
     private Question $question;
     private string $description;
+    private \DateTimeImmutable $givenOn;
 
       /**
        * Creates a AnswerWasCreated
@@ -30,6 +31,7 @@ class AnswerWasCreated extends AbstractEvent implements Event
         $this->owner = $answer->owner()->userId();
         $this->question = $answer->question();
         $this->description = $answer->description();
+        $this->givenOn = new \DateTimeImmutable();
 
       }
 
@@ -63,6 +65,11 @@ class AnswerWasCreated extends AbstractEvent implements Event
     public function description(): string
     {
         return $this->description;
+    }
+
+    public function givenOn()
+    {
+        return $this->givenOn;
     }
 
 
