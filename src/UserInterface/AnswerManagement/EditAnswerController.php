@@ -1,15 +1,15 @@
 <?php
 
 
-namespace App\UserInterface\QuestionManagement;
+namespace App\UserInterface\AnswerManagement;
 
-
+use App\Application\AnswerManagement\EditAnswerCommand;
 use App\Application\CommandBus;
-use App\Application\QuestionManagement\DeleteQuestionCommand;
+use App\Application\QuestionManagement\EditQuestionCommand;
+use App\Domain\AnswerManagement\Answer;
 use App\Domain\Exception\EntityNotFound;
 use App\Domain\Exception\FailedEntitySpecification;
 use App\Domain\QuestionManagement\Question\QuestionId;
-
 use App\UserInterface\ApiControllerMethods;
 use App\UserInterface\UserManagement\OAuth2\AuthenticatedControllerInterface;
 use App\UserInterface\UserManagement\OAuth2\AuthenticatedControllerMethods;
@@ -17,17 +17,14 @@ use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
 
 /**
- * DeleteQuestionController
+ * EditAnswerController
  *
  * @package App\UserInterface\QuestionManagement
  */
 
-
-class DeleteQuestionController  extends AbstractController implements AuthenticatedControllerInterface
+class EditAnswerController extends AbstractController implements AuthenticatedControllerInterface
 {
     use ApiControllerMethods;
     use AuthenticatedControllerMethods;
@@ -38,7 +35,7 @@ class DeleteQuestionController  extends AbstractController implements Authentica
     private CommandBus $commandBus;
 
     /**
-     * Creates a EditQuestionController
+     * Creates a EditAnswerController
      *
      * @param CommandBus $commandBus
      */
@@ -48,20 +45,24 @@ class DeleteQuestionController  extends AbstractController implements Authentica
     }
 
     /**
-     * Handles delete question command
+     * Handles edit answer command
      *
      * @param Request $request
      * @return Response
-     * @Route(path="/question/{questionId}", methods={"DELETE"})
+     * @Route(path="/question/{questionId}", methods={"PUT", "PATCH"})
      */
-    public function handle(Request $request, string $questionId): Response
+    public function handle(Request $request, string $answerId): Response
     {
         try {
-            $questionId = new QuestionId($questionId);
+            $answerId = new Answer($answerId);
+            $data = $this->parseRequest($request, ["description"]);
+            if (!$this->valid) {
+                return $this->badRequest("Invalid or missing request data.");
+            }
 
-
-            $command = new DeleteQuestionCommand(
-                $questionId
+            $command = new EditAnswerCommand(
+                $answerId, ,
+                $data->description,
 
             );
 
@@ -75,29 +76,30 @@ class DeleteQuestionController  extends AbstractController implements Authentica
             return $this->badRequest($ex->getMessage());
         }
 
-        return new Response(json_encode($question), 200, ['content-type' => 'application/json']);
+        return new Response(json_encode($answerId), 200, ['content-type' => 'application/json']);
 
     }
+}
 
 
 /**
- * @OA\Delete(
- *     path="/question/{questionId}",
- *     tags={"Questions"},
- *     summary="Delete the question with the provided question identifier",
- *     operationId="deleteQuestion",
+ * @OA\Put(
+ *     path="/answer/{answerId}",
+ *     tags={"Answers"},
+ *     summary="Edits the answer with the provided question identifier",
+ *     operationId="editAnswer",
  *     @OA\Response(
  *         response=400,
  *         description="Missing property or errors regarding data sent."
  *     ),
  *     @OA\Response(
  *         response=404,
- *         description="Quesiton not found"
+ *         description="Answer not found"
  *     ),
  *     @OA\Parameter(
- *         name="questionId",
+ *         name="answerId",
  *         in="path",
- *         description="ID of question to delete",
+ *         description="ID of answer to edit",
  *         required=true,
  *         @OA\Schema(
  *             type="string"
@@ -105,22 +107,22 @@ class DeleteQuestionController  extends AbstractController implements Authentica
  *     ),
  *     @OA\Response(
  *         response=412,
- *         description="Trying to edit a question that isn't owned by the authenticated user or it's open."
+ *         description="Trying to edit a answer that isn't owned by the authenticated user or it's open."
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="The question with changed values",
- *         @OA\JsonContent(ref="#/components/schemas/Question")
+ *         description="The answer with changed values",
+ *         @OA\JsonContent(ref="#/components/schemas/answer")
  *     ),
  *     @OA\RequestBody(
- *     request="DeleteQuestion",
+ *     request="EditQuestion",
  *         description="Object containing the new inforamtion needded to update the question stored with the privided identifier",
  *         required=true,
- *         @OA\JsonContent(ref="#/components/schemas/DeleteQuestionCommand")
+ *         @OA\JsonContent(ref="#/components/schemas/EditAnswerCommand")
  *     ),
  *     security={
  *         {"OAuth2.0-Token": {"user.management"}}
  *     }
  * )
  */
-}
+
