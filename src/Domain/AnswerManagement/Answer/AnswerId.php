@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\AnswerManagement\Answer\Events;
+namespace App\Domain\AnswerManagement\Answer;
 
 use App\Domain\Common\RootAggregatorId;
 

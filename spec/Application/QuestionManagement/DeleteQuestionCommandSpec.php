@@ -10,15 +10,13 @@ use PhpSpec\ObjectBehavior;
 class DeleteQuestionCommandSpec extends ObjectBehavior
 {
     private $questionId;
-    private $title;
-    private $body;
+
 
     function let()
     {
         $this->questionId = new QuestionId();
-        $this->title = 'Delete title';
-        $this->body = 'Delete body';
-        $this->beConstructedWith($this->questionId, $this->title, $this->body);
+
+        $this->beConstructedWith($this->questionId);
     }
 
 
@@ -38,15 +36,7 @@ class DeleteQuestionCommandSpec extends ObjectBehavior
         $this->questionId()->shouldBe($this->questionId);
     }
 
-    function it_has_a_title()
-    {
-        $this->title()->shouldBe($this->title);
-    }
 
-    function it_has_a_body()
-    {
-        $this->body()->shouldBe($this->body);
-    }
 
 
 

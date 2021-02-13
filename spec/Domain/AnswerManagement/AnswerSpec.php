@@ -12,18 +12,18 @@ class AnswerSpec extends ObjectBehavior
 {
 
 
-    private QuestionId $questionId;
+    private Question $question;
 
     private $description;
 
 
 
-    function let(User $user)
+    function let(User $user, Question $question)
     {
         $user->userId()->willReturn(new User\UserId());
-        $this->questionId = new QuestionId();
+        $question->questionId()->willReturn(new QuestionId());
         $this->description = "It's 5 pm";
-        $this->beConstructedWith($user, $this->questionId, $this->description);
+        $this->beConstructedWith($user, $question, $this->description);
     }
 
     function it_is_initializable()
@@ -38,7 +38,7 @@ class AnswerSpec extends ObjectBehavior
 
     function it_has_a_answer_id()
     {
-        $this->answerId()->shouldBeAnInstanceOf(Answer\Events\AnswerId::class);
+        $this->answerId()->shouldBeAnInstanceOf(Answer\AnswerId::class);
     }
 
     function it_has_a_description()
@@ -49,6 +49,11 @@ class AnswerSpec extends ObjectBehavior
     function it_has_a_date_when_answer_was_given()
     {
         $this->givenOn()->shouldBeAnInstanceOf(\DateTimeImmutable::class);
+    }
+
+    function it_has_a_question(Question $question)
+    {
+        $this->question()->shouldBe($question);
     }
 
 

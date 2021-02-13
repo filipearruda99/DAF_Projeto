@@ -2,18 +2,19 @@
 
 namespace App\Domain\AnswerManagement;
 
-use App\Domain\AnswerManagement\Answer\Events\AnswerId;
+use App\Domain\AnswerManagement\Answer\AnswerId;
+use App\Domain\QuestionManagement\Question;
 use App\Domain\QuestionManagement\Question\QuestionId;
 use App\Domain\UserManagement\User;
 use DateTimeImmutable;
-use JsonSerializable;
+
 
 
 class Answer
 {
 
 
-    private QuestionId $questionId;
+    private Question $question;
 
     private AnswerId $answerId;
 
@@ -24,9 +25,9 @@ class Answer
     private string $description;
 
 
-    public function __construct(User $owner, QuestionId $questionId, string $description)
+    public function __construct(User $owner, Question $question, string $description)
     {
-        $this->questionId = $questionId;
+        $this->question = $question;
         $this->answerId = new AnswerId();
         $this->owner = $owner;
         $this->givenOn = new DateTimeImmutable();
@@ -35,11 +36,11 @@ class Answer
 
 
     /**
-     * @return QuestionId
+     * @return Question
      */
-    public function questionId(): QuestionId
+    public function question(): Question
     {
-        return $this->questionId;
+        return $this->question;
     }
 
     /**
